@@ -141,9 +141,9 @@ def testHypothesis(trained_model, retrained_model, test_loader, output_label = N
                 newRetrainedSet = torch.cat((predicted_set_retrained[:ind], predicted_set_retrained[ind+1:]))
             else:
                 indOrg = int(torch.where(predicted_set_retrained == test_label)[0].cpu().numpy()[0])
-                newPredictedSet = torch.cat((predicted_set_original[:indOrg], predicted_set_original[indOrg+1:]))
+                newPredictedSet = torch.cat((predicted_set_original[:indOrg-1], predicted_set_original[indOrg+1:]))
                 indRet = int(torch.where(predicted_set_retrained == test_label)[0].cpu().numpy()[0])
-                newRetrainedSet = torch.cat((predicted_set_retrained[:indRet], predicted_set_retrained[indRet+1:]))
+                newRetrainedSet = torch.cat((predicted_set_retrained[:indRet-1], predicted_set_retrained[indRet+1:]))
 
             newPredictedSet = newPredictedSet.cpu().numpy()
             newRetrainedset = newRetrainedSet.cpu().numpy()

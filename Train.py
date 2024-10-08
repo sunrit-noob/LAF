@@ -193,7 +193,7 @@ def testHypothesis(trained_model, retrained_model, test_loader, output_label = N
 
     return selected_acc, matchLength
 
-def test(retrained_model, unlearn_model, test_loader, output_label = None):
+def testUnlearn(retrained_model, unlearn_model, test_loader, output_label = None):
     retrained_model = retrained_model.cuda()
     unlearn_model = unlearn_model.cuda()
     retrained_model.eval()

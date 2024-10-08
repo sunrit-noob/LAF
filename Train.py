@@ -133,32 +133,31 @@ def testHypothesis(trained_model, retrained_model, test_loader, output_label = N
             y_out, _ = trained_model(x)
             y_out_retrained, _ = retrained_model(x)
 
-            predicted_set_original = torch.from_numpy(np.argsort(-y_out.cpu().numpy())[::-1].copy())
-            predicted_set_retrained = torch.from_numpy(np.argsort(-y_out_retrained.cpu().numpy())[::-1].copy())
-            if(labelAgnostic):
-                newPredictedSet = predicted_set_original[1:]
-                ind = int(torch.where(predicted_set_retrained == predicted_set_original[0])[0].cpu().numpy()[0])
-                newRetrainedSet = torch.cat((predicted_set_retrained[:ind], predicted_set_retrained[ind+1:]))
-            else:
-                indOrg = int(torch.where(predicted_set_retrained == test_label)[0].cpu().numpy()[0])
-                newPredictedSet = torch.cat((predicted_set_original[:indOrg-1], predicted_set_original[indOrg+1:]))
-                indRet = int(torch.where(predicted_set_retrained == test_label)[0].cpu().numpy()[0])
-                newRetrainedSet = torch.cat((predicted_set_retrained[:indRet-1], predicted_set_retrained[indRet+1:]))
-
-            newPredictedSet = newPredictedSet.cpu().numpy()
-            newRetrainedset = newRetrainedSet.cpu().numpy()
-            print(newPredictedSet)
-            print(newRetrainedSet)
-            i = 0
-            while i < len(newPredictedSet):
-                if(newPredictedSet[i] != newRetrainedSet[i]):
-                    y1 = torch.tensor([i])
+            predicted_set_original = torch.from_numpy(np.argsort(-y_out.cpu().numpy())[:, ::-1].copy())
+            predicted_set_retrained = torch.from_numpy(np.argsort(-y_out_retrained.cpu().numpy())[:, ::-1].copy())
+            for k in range(len(predicted_set_original)):
+                if(labelAgnostic):
+                    newPredictedSet = predicted_set_original[k][1:]
+                    ind = int(torch.where(predicted_set_retrained[k] == predicted_set_original[k][0])[0].cpu().numpy()[0])
+                    newRetrainedSet = torch.cat((predicted_set_retrained[k][:ind], predicted_set_retrained[k][ind+1:]))
+                else:
+                    indOrg = int(torch.where(predicted_set_retrained[k] == test_label)[0].cpu().numpy()[0])
+                    newPredictedSet = torch.cat((predicted_set_original[k][:indOrg], predicted_set_original[k][indOrg+1:]))
+                    indRet = int(torch.where(predicted_set_retrained[k] == test_label)[0].cpu().numpy()[0])
+                    newRetrainedSet = torch.cat((predicted_set_retrained[k][:indRet], predicted_set_retrained[k][indRet+1:]))
+    
+                newPredictedSet = newPredictedSet.cpu().numpy()
+                newRetrainedset = newRetrainedSet.cpu().numpy()
+                i = 0
+                while i < len(newPredictedSet):
+                    if(newPredictedSet[i] != newRetrainedSet[i]):
+                        y1 = torch.tensor([i])
+                        matchLength = torch.cat((matchLength, y1.cpu()),dim=0)
+                        break
+                    i += 1
+                if(i == len(newPredictedSet)):
+                    y1 = torch.tensor([len(newPredictedSet)])
                     matchLength = torch.cat((matchLength, y1.cpu()),dim=0)
-                    break
-                i += 1
-            if(i == len(newPredictedSet)):
-                y1 = torch.tensor([len(newPredictedSet)])
-                matchLength = torch.cat((matchLength, y1.cpu()),dim=0)
                 
             _, predicted = torch.max(y_out.data, dim=1)
             all_preds = torch.cat((all_preds, y_out.cpu()),dim=0)

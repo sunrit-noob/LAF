@@ -147,6 +147,8 @@ def testHypothesis(trained_model, retrained_model, test_loader, output_label = N
 
             newPredictedSet = newPredictedSet.cpu().numpy()
             newRetrainedset = newRetrainedSet.cpu().numpy()
+            print(newPredictedSet)
+            print(newRetrainedSet)
             i = 0
             while i < len(newPredictedSet):
                 if(newPredictedSet[i] != newRetrainedSet[i]):

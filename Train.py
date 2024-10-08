@@ -137,12 +137,12 @@ def testHypothesis(trained_model, retrained_model, test_loader, output_label = N
             predicted_set_retrained = torch.from_numpy(np.argsort(-y_out_retrained.cpu().numpy()))
             if(labelAgnostic):
                 newPredictedSet = predicted_set_original[1:]
-                ind = torch.where(predicted_set_retrained == predicted_set_original[0])
+                ind = int(torch.where(predicted_set_retrained == predicted_set_original[0])[0].cpu().numpy()[0])
                 newRetrainedSet = torch.cat(predicted_set_retrained[:ind], predicted_set_retrained[ind+1:])
             else:
-                indOrg = torch.where(predicted_set_retrained == test_label)
+                indOrg = int(torch.where(predicted_set_retrained == test_label)[0].cpu().numpy()[0])
                 newPredictedSet = torch.cat(predicted_set_original[:indOrg], predicted_set_original[indOrg+1:])
-                indRet = torch.where(predicted_set_retrained == test_label)
+                indRet = int(torch.where(predicted_set_retrained == test_label)[0].cpu().numpy()[0])
                 newRetrainedSet = torch.cat(predicted_set_retrained[:indRet], predicted_set_retrained[indRet+1:])
 
             for i in range(1, len(newPredictedSet)):

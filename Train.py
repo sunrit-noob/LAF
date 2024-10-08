@@ -147,7 +147,7 @@ def testHypothesis(trained_model, retrained_model, test_loader, output_label = N
 
             i = 0
             while i < len(newPredictedSet):
-                if(newPredictedSet[i] != newRetrainedSet[i]):
+                if(newPredictedSet[i].numpy() != newRetrainedSet[i].numpy()):
                     y1 = torch.tensor([i])
                     matchLength = torch.cat((matchLength, y1.cpu()),dim=0)
                     break

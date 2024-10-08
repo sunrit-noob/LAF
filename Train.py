@@ -133,7 +133,7 @@ def testHypothesis(trained_model, retrained_model, test_loader, output_label = N
             y_out, _ = trained_model(x)
             y_out_retrained, _ = retrained_model(x)
 
-            predicted_set_original = torch.from_numpy(np.argsort(-y_out.cpu().numpy()).[::-1].copy())
+            predicted_set_original = torch.from_numpy(np.argsort(-y_out.cpu().numpy())[::-1].copy())
             predicted_set_retrained = torch.from_numpy(np.argsort(-y_out_retrained.cpu().numpy())[::-1].copy())
             if(labelAgnostic):
                 newPredictedSet = predicted_set_original[1:]

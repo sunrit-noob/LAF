@@ -145,9 +145,11 @@ def testHypothesis(trained_model, retrained_model, test_loader, output_label = N
                 indRet = int(torch.where(predicted_set_retrained == test_label)[0].cpu().numpy()[0])
                 newRetrainedSet = torch.cat((predicted_set_retrained[:indRet], predicted_set_retrained[indRet+1:]))
 
+            newPredictedSet = newPredictedSet.cpu().numpy()
+            newRetrainedset = newRetrainedSet.cpu().numpy()
             i = 0
             while i < len(newPredictedSet):
-                if(newPredictedSet[i].numpy() != newRetrainedSet[i].numpy()):
+                if(newPredictedSet[i] != newRetrainedSet[i]):
                     y1 = torch.tensor([i])
                     matchLength = torch.cat((matchLength, y1.cpu()),dim=0)
                     break
